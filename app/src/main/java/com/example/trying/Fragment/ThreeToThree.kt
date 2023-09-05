@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.trying.MainActivity
 import com.example.trying.R
-import com.example.trying.databinding.ActivityMainBinding
 import com.example.trying.databinding.ThreeXThreeBinding
 
 
@@ -18,9 +18,9 @@ class ThreeToThree: Fragment(){
     var imageClickable= arrayOf(0,0,0,0,0,0,0,0,0)
 
 
-    var turn:Int=1;
+    private var turn:Int=1;
 
-    var matrix = arrayOf(
+    private var matrix = arrayOf(
         arrayOf(-1, -1, -1),
         arrayOf(-1, -1, -1),
         arrayOf(-1, -1, -1)
@@ -31,111 +31,86 @@ class ThreeToThree: Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-         super.onCreateView(inflater, container, savedInstanceState)
-         val view=binding.root
-        return  view
+        super.onCreateView(inflater, container, savedInstanceState)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isPlayerTurn()
 
-        binding.restart.setOnClickListener(object :View.OnClickListener{
-            override fun onClick(p0: View?) {
-                restart()
+        binding.restart.setOnClickListener { restart() }
+
+        binding.b1.setOnClickListener {
+            if (isClickable(0)) {
+                perfromAction(binding.b1, 0, 0)
+                imageClickable[0] = 1
             }
         }
-        )
 
-        binding.b1.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(0)){
-                    perfromAction(binding.b1,0,0)
-                    imageClickable[0]=1;
-                }
+        binding.b2.setOnClickListener {
+            if (isClickable(1)) {
+                perfromAction(binding.b2, 0, 1)
+                imageClickable[1] = 1
             }
-        })
+        }
 
-        binding.b2.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(1)){
-                    perfromAction(binding.b2,0,1)
-                    imageClickable[1]=1;
-                }
+
+        binding.b2.setOnClickListener {
+            if (isClickable(1)) {
+                perfromAction(binding.b2, 0, 1)
+                imageClickable[1] = 1
             }
-        })
+        }
 
-
-        binding.b2.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(1)){
-                    perfromAction(binding.b2,0,1)
-                    imageClickable[1]=1;
-                }
+        binding.b3.setOnClickListener {
+            if (isClickable(2)) {
+                perfromAction(binding.b3, 0, 2)
+                imageClickable[2] = 1
             }
-        })
-
-        binding.b3.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(2)){
-                    perfromAction(binding.b3,0,2)
-                    imageClickable[2]=1;
-                }
-            }
-        })
+        }
 
 
-        binding.b4.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(3)){
-                    perfromAction(binding.b4,1,0)
-                    imageClickable[3]=1;
-                }
+        binding.b4.setOnClickListener {
+            if (isClickable(3)) {
+                perfromAction(binding.b4, 1, 0)
+                imageClickable[3] = 1
             }
-        })
+        }
 
-        binding.b5.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(4)){
-                    perfromAction(binding.b5,1,1)
-                    imageClickable[4]=1;
-                }
+        binding.b5.setOnClickListener {
+            if (isClickable(4)) {
+                perfromAction(binding.b5, 1, 1)
+                imageClickable[4] = 1
             }
-        })
+        }
 
-        binding.b6.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(5)){
-                    perfromAction(binding.b6,1,2)
-                    imageClickable[5]=1;
-                }
+        binding.b6.setOnClickListener {
+            if (isClickable(5)) {
+                perfromAction(binding.b6, 1, 2)
+                imageClickable[5] = 1
             }
-        })
-        binding.b7.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(6)){
-                    perfromAction(binding.b7,2,0)
-                    imageClickable[6]=1;
-                }
+        }
+        binding.b7.setOnClickListener {
+            if (isClickable(6)) {
+                perfromAction(binding.b7, 2, 0)
+                imageClickable[6] = 1
             }
-        })
+        }
 
-        binding.b8.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(7)){
-                    perfromAction(binding.b8,2,1)
-                    imageClickable[7]=1;
-                }
+        binding.b8.setOnClickListener {
+            if (isClickable(7)) {
+                perfromAction(binding.b8, 2, 1)
+                imageClickable[7] = 1
             }
-        })
+        }
 
-        binding.b9.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(8)){
-                    perfromAction(binding.b9,2,2)
-                    imageClickable[8]=1;
-                }
+        binding.b9.setOnClickListener {
+            if (isClickable(8)) {
+                perfromAction(binding.b9, 2, 2)
+                imageClickable[8] = 1
             }
-        })
+        }
     }
 
 
@@ -161,15 +136,27 @@ class ThreeToThree: Fragment(){
         binding.b9.setImageResource(R.color.white)
     }
 
-    private fun perfromAction( imageView: ImageView, x:Int, y:Int) {
+    private fun isPlayerTurn(){
         if(turn==1){
-            matrix[x][y]=1;
+            binding.crossLayout.setBackgroundResource(R.drawable.shape)
+            binding.zeroLayout.setBackgroundResource(R.drawable.shape2)
+        }else{
+            binding.zeroLayout.setBackgroundResource(R.drawable.shape)
+            binding.crossLayout.setBackgroundResource(R.drawable.shape2)
+        }
+    }
+
+    private fun perfromAction(imageView: ImageView, x:Int, y:Int) {
+        if(turn==1){
+            matrix[x][y]=1
             imageView.setImageResource(R.drawable.cross)
             turn=0
+            isPlayerTurn()
         }else if(turn==0){
             matrix[x][y]=0
             imageView.setImageResource(R.drawable.zero2)
             turn=1
+            isPlayerTurn()
         }
         val win=check()
         if(winner(win)){

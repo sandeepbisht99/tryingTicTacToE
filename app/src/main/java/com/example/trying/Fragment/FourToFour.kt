@@ -40,6 +40,8 @@ class FourToFour:Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=FourXFourBinding.inflate(layoutInflater)
+        isPlayerTurn()
+
 
 
         binding.restart.setOnClickListener(object :View.OnClickListener{
@@ -194,6 +196,15 @@ class FourToFour:Fragment() {
             }
         })
     }
+    private fun isPlayerTurn(){
+        if(turn==1){
+            binding.crossLayout.setBackgroundResource(R.drawable.shape)
+            binding.zeroLayout.setBackgroundResource(R.drawable.shape2)
+        }else{
+            binding.zeroLayout.setBackgroundResource(R.drawable.shape)
+            binding.crossLayout.setBackgroundResource(R.drawable.shape2)
+        }
+    }
     private fun restart(){
         imageClickable= arrayOf(0,0,0,0,
             0,0,0,0,
@@ -233,10 +244,12 @@ class FourToFour:Fragment() {
             matrix[x][y]=1;
             imageView.setImageResource(R.drawable.cross)
             turn=0
+            isPlayerTurn()
         }else if(turn==0){
             matrix[x][y]=0
             imageView.setImageResource(R.drawable.zero2)
             turn=1
+            isPlayerTurn()
         }
         val win=check()
         if(winner(win)){
