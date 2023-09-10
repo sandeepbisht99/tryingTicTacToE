@@ -385,7 +385,7 @@ class FiveToFive:Fragment() {
                 return matrix[i][1] // Row win
             }
             if (matrix[0][i] == matrix[1][i] && matrix[1][i] == matrix[2][i] && matrix[3][i]==matrix[2][i] && matrix[0][i] != -1
-                ||matrix[1][i] == matrix[2][i] && matrix[2][i] == matrix[3][i] && matrix[1][i] != -1) {
+                ||matrix[1][i] == matrix[2][i] && matrix[2][i] == matrix[3][i]  && matrix[3][i]==matrix[4][i] && matrix[1][i] != -1) {
                 return matrix[1][i] // Column win
             }
         }
@@ -413,7 +413,7 @@ class FiveToFive:Fragment() {
         }
 
         if(matrix[1][4] ==matrix[2][3] && matrix[2][3] == matrix[3][2] && matrix[3][2] == matrix[4][1] && matrix[1][4] != -1){
-            return matrix[1][3]
+            return matrix[1][4]
         }
 
 

@@ -308,7 +308,7 @@ class FourToFour:Fragment() {
 
         if (matrix[0][3] ==matrix[1][2] && matrix[1][2] == matrix[2][1] && matrix[0][3] != -1
             || matrix[1][2] ==matrix[2][1] && matrix[2][1] == matrix[3][0] && matrix[1][2] != -1) {
-            return matrix[0][2] // Diagonal win (top-right to bottom-left)
+            return matrix[1][2] // Diagonal win (top-right to bottom-left)
         }
 
         if(matrix[0][2] ==matrix[1][1] && matrix[1][1] == matrix[2][0] && matrix[0][2] != -1 ){
