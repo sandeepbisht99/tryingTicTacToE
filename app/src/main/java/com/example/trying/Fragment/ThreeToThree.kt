@@ -1,12 +1,10 @@
 package com.example.trying.Fragment
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.trying.MainActivity
 import com.example.trying.R
@@ -18,7 +16,7 @@ class ThreeToThree: Fragment(){
     var imageClickable= arrayOf(0,0,0,0,0,0,0,0,0)
 
 
-    private var turn:Int=1;
+    private var turn:Int=1
 
     private var matrix = arrayOf(
         arrayOf(-1, -1, -1),
@@ -118,6 +116,7 @@ class ThreeToThree: Fragment(){
         imageClickable= arrayOf(0,0,0,0,0,0,0,0,0)
 
         turn =1
+        isPlayerTurn()
 
         matrix = arrayOf(
             arrayOf(-1, -1, -1),
@@ -171,18 +170,20 @@ class ThreeToThree: Fragment(){
         return false
     }
 
-    private fun winner(win: Int):Boolean {
-        if(win==1){
+    private fun winner(win: Int):Boolean = when (win) {
+        1 -> {
             Toast.makeText(context as MainActivity,"x is winner", Toast.LENGTH_SHORT).show()
-            return true
-        }else if(win==0){
-            Toast.makeText(context as MainActivity,"0 is winner", Toast.LENGTH_SHORT).show()
-            return true
-        }else if(win==2){
-            Toast.makeText(context as MainActivity,"Game Drow", Toast.LENGTH_SHORT).show()
-            return true
+            true
         }
-        return false
+        0 -> {
+            Toast.makeText(context as MainActivity,"0 is winner", Toast.LENGTH_SHORT).show()
+            true
+        }
+        2 -> {
+            Toast.makeText(context as MainActivity,"Game Drow", Toast.LENGTH_SHORT).show()
+            true
+        }
+        else -> false
     }
 
     private fun check() :Int{
