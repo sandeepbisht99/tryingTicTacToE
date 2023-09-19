@@ -1,10 +1,11 @@
 package com.example.trying
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.trying.Fragment.FiveToFive
 import com.example.trying.Fragment.FourToFour
 import com.example.trying.Fragment.ThreeToThree
+import com.example.trying.Utiil.Utills
 import com.example.trying.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -32,5 +33,17 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.framelayout,frame)
         transaction.commit()
 
+    }
+
+
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Utills.destroy()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Utills.destroy()
     }
 }

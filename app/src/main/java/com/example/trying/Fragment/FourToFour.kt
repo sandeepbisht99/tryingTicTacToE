@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.trying.MainActivity
 import com.example.trying.R
+import com.example.trying.Utiil.Utills
 import com.example.trying.databinding.FourXFourBinding
 
 class FourToFour:Fragment() {
@@ -232,14 +233,16 @@ class FourToFour:Fragment() {
         if(turn==1){
             matrix[x][y]=1;
             imageView.setImageResource(R.drawable.cross)
+            Utills.SoundBeep(context as MainActivity,R.raw.tox)
             turn=0
         }else if(turn==0){
             matrix[x][y]=0
             imageView.setImageResource(R.drawable.zero2)
+            Utills.SoundBeep(context as MainActivity,R.raw.tozero)
             turn=1
         }
         val win=check()
-        if(winner(win)){
+        if(Utills.winner(win,context as MainActivity)){
             imageClickable= arrayOf(1,1,1,1,
                 1,1,1,1,
                 1,1,1,1,
@@ -254,7 +257,7 @@ class FourToFour:Fragment() {
         return false
     }
 
-    private fun winner(win: Int):Boolean {
+    /*private fun winner(win: Int):Boolean {
         if(win==1){
             Toast.makeText(context as MainActivity,"x is winner", Toast.LENGTH_SHORT).show()
             return true
@@ -266,7 +269,7 @@ class FourToFour:Fragment() {
             return true
         }
         return false
-    }
+    }*/
 
     private fun check() :Int{
         for (i in 0 until 4) {
@@ -295,7 +298,7 @@ class FourToFour:Fragment() {
 
         if (matrix[0][3] ==matrix[1][2] && matrix[1][2] == matrix[2][1] && matrix[0][3] != -1
             || matrix[1][2] ==matrix[2][1] && matrix[2][1] == matrix[3][0] && matrix[1][2] != -1) {
-            return matrix[0][2] // Diagonal win (top-right to bottom-left)
+            return matrix[1][2] // Diagonal win (top-right to bottom-left)
         }
 
         if(matrix[0][2] ==matrix[1][1] && matrix[1][1] == matrix[2][0] && matrix[0][2] != -1 ){
