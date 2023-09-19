@@ -18,11 +18,12 @@ class FourToFour:Fragment() {
         0,0,0,0,
         0,0,0,0,
         0,0,0,0)
+    private var playerChoice=2
 
 
-    var turn:Int=1;
+    private var turn:Int=1;
 
-    var matrix = arrayOf(
+    private var matrix = arrayOf(
         arrayOf(-1, -1, -1,-1),
         arrayOf(-1, -1, -1,-1),
         arrayOf(-1, -1, -1,-1),
@@ -42,158 +43,109 @@ class FourToFour:Fragment() {
         super.onCreate(savedInstanceState)
         binding=FourXFourBinding.inflate(layoutInflater)
 
+        playerChoice=(context as MainActivity).intent.getIntExtra("PLAYER",2)
+        Toast.makeText(context,"playerChoice "+playerChoice,Toast.LENGTH_SHORT).show()
+        /*if(playerChoice!=2){
+            isPalyerTaskWithAI()
+        }*/
+        binding.restart.setOnClickListener { restart() }
 
-        binding.restart.setOnClickListener(object :View.OnClickListener{
-            override fun onClick(view: View) {
-                restart()
+        binding.b1.setOnClickListener {
+            if (isClickable(0)) {
+                perfromAction(binding.b1, 0, 0,0)
             }
+        }
 
-        })
-
-        binding.b1.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(0)){
-                    perfromAction(binding.b1,0,0)
-                    imageClickable[0]=1;
-                }
+        binding.b2.setOnClickListener {
+            if (isClickable(1)) {
+                perfromAction(binding.b2, 0, 1,1)
             }
-        })
+        }
 
-        binding.b2.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(1)){
-                    perfromAction(binding.b2,0,1)
-                    imageClickable[1]=1;
-                }
+        binding.b3.setOnClickListener {
+            if (isClickable(2)) {
+                perfromAction(binding.b3, 0, 2,2)
             }
-        })
+        }
 
-        binding.b3.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(2)){
-                    perfromAction(binding.b3,0,2)
-                    imageClickable[2]=1;
-                }
+
+        binding.b4.setOnClickListener {
+            if (isClickable(3)) {
+                perfromAction(binding.b4, 0, 3,3)
             }
-        })
+        }
 
-
-        binding.b4.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(3)){
-                    perfromAction(binding.b4,0,3)
-                    imageClickable[3]=1;
-                }
+        binding.b5.setOnClickListener {
+            if (isClickable(4)) {
+                perfromAction(binding.b5, 1, 0,4)
             }
-        })
+        }
 
-        binding.b5.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(4)){
-                    perfromAction(binding.b5,1,0)
-                    imageClickable[4]=1;
-                }
+        binding.b6.setOnClickListener {
+            if (isClickable(5)) {
+                perfromAction(binding.b6, 1, 1,5)
             }
-        })
+        }
+        binding.b7.setOnClickListener {
+            if (isClickable(6)) {
+                perfromAction(binding.b7, 1, 2,6)
+            }
+        }
 
-        binding.b6.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(5)){
-                    perfromAction(binding.b6,1,1)
-                    imageClickable[5]=1;
-                }
+        binding.b8.setOnClickListener {
+            if (isClickable(7)) {
+                perfromAction(binding.b8, 1, 3,7)
             }
-        })
-        binding.b7.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(6)){
-                    perfromAction(binding.b7,1,2)
-                    imageClickable[6]=1;
-                }
-            }
-        })
+        }
 
-        binding.b8.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(7)){
-                    perfromAction(binding.b8,1,3)
-                    imageClickable[7]=1;
-                }
+        binding.b9.setOnClickListener {
+            if (isClickable(8)) {
+                perfromAction(binding.b9, 2, 0,8)
             }
-        })
+        }
 
-        binding.b9.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(8)){
-                    perfromAction(binding.b9,2,0)
-                    imageClickable[8]=1;
-                }
+        binding.b10.setOnClickListener {
+            if (isClickable(9)) {
+                perfromAction(binding.b10, 2, 1,9)
             }
-        })
+        }
 
-        binding.b10.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(9)){
-                    perfromAction(binding.b10,2,1)
-                    imageClickable[9]=1;
-                }
+        binding.b11.setOnClickListener {
+            if (isClickable(10)) {
+                perfromAction(binding.b11, 2, 2,10)
             }
-        })
+        }
 
-        binding.b11.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(10)){
-                    perfromAction(binding.b11,2,2)
-                    imageClickable[10]=1;
-                }
+        binding.b12.setOnClickListener {
+            if (isClickable(11)) {
+                perfromAction(binding.b12, 2, 3,11)
             }
-        })
-
-        binding.b12.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(11)){
-                    perfromAction(binding.b12,2,3)
-                    imageClickable[11]=1;
-                }
-            }
-        })
+        }
 
 
-        binding.b13.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(12)){
-                    perfromAction(binding.b13,3,0)
-                    imageClickable[12]=1;
-                }
+        binding.b13.setOnClickListener {
+            if (isClickable(12)) {
+                perfromAction(binding.b13, 3, 0,12)
             }
-        })
+        }
 
-        binding.b14.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(13)){
-                    perfromAction(binding.b14,3,1)
-                    imageClickable[13]=1;
-                }
+        binding.b14.setOnClickListener {
+            if (isClickable(13)) {
+                perfromAction(binding.b14, 3, 1,13)
             }
-        })
+        }
 
-        binding.b15.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(14)){
-                    perfromAction(binding.b15,3,2)
-                    imageClickable[14]=1;
-                }
+        binding.b15.setOnClickListener {
+            if (isClickable(14)) {
+                perfromAction(binding.b15, 3, 2,14)
             }
-        })
+        }
 
-        binding.b16.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                if(isClickable(15)){
-                    perfromAction(binding.b16,3,3)
-                    imageClickable[15]=1;
-                }
+        binding.b16.setOnClickListener {
+            if (isClickable(15)) {
+                perfromAction(binding.b16, 3, 3,15)
             }
-        })
+        }
     }
     private fun restart(){
         imageClickable= arrayOf(0,0,0,0,
@@ -229,12 +181,152 @@ class FourToFour:Fragment() {
         binding.b16.setImageResource(R.color.white)
     }
 
-    private fun perfromAction( imageView: ImageView, x:Int, y:Int) {
+    private fun getImageView(x: Int, y:Int): ImageContainer {
+        if(x==0 && y==0) {
+            return ImageContainer(binding.b1, 0)
+        }else if(x==0 && y==1) {
+            return ImageContainer(binding.b2, 1)
+        }
+        else if(x==0 && y==2) {
+            return ImageContainer(binding.b3, 2)
+        }
+        else if(x==0 && y==3) {
+            return ImageContainer(binding.b4, 3)
+        }
+        else if(x==1 && y==0) {
+            return ImageContainer(binding.b5, 4)
+        }
+        else if(x==1 && y==1) {
+            return ImageContainer(binding.b6, 5)
+        }
+        else if(x==1 && y==2) {
+            return ImageContainer(binding.b7, 6)
+        }
+        else if(x==1 && y==3) {
+            return ImageContainer(binding.b8, 7)
+        }
+        else if(x==2 && y==0) {
+            return ImageContainer(binding.b9, 8)
+        }
+        else if(x==2 && y==1) {
+            return ImageContainer(binding.b10, 9)
+        }
+        else if(x==2 && y==2) {
+            return ImageContainer(binding.b11, 10)
+        }
+        else if(x==2 && y==3) {
+            return ImageContainer(binding.b12, 11)
+        }
+        else if(x==3 && y==0) {
+            return ImageContainer(binding.b13, 12)
+        }
+        else if(x==3 && y==1) {
+            return ImageContainer(binding.b14, 13)
+        }
+        else if(x==3 && y==2) {
+            return ImageContainer(binding.b15, 14)
+        }
+        else {
+            return ImageContainer(binding.b16, 15)
+        }
+    }
+
+    private fun minmax(depth:Int, isMaximizing: Boolean):Int{
+        if(check()==1) return depth-10
+        if(check()==0) return 10 -depth
+        if(check()==2) return -2
+
+        if(isMaximizing){
+            var bestScore = Int.MIN_VALUE
+            for (i in 0 until 4) {
+                for (j in 0 until 4) {
+                    if (matrix[i][j] == -1) {
+                        matrix[i][j] = 0
+                        val score = minmax(depth+1,false)
+                        matrix[i][j] = -1
+                        bestScore = maxOf(bestScore, score)
+                    }
+                }
+            }
+            return bestScore
+        }else{
+            var bestScore = Int.MAX_VALUE
+            for (i in 0 until 4) {
+                for (j in 0 until 4) {
+                    if (matrix[i][j] ==-1) {
+                        matrix[i][j] = 1
+                        val score = minmax( depth+1,true)
+                        matrix[i][j] = -1
+                        bestScore = minOf(bestScore, score)
+                    }
+                }
+            }
+            return bestScore
+        }
+    }
+
+     class ImageContainer(val  imageView: ImageView,val  index: Int)
+     class IndexContainer(val x : Int, val y:Int)
+
+    fun getBestMove(): IndexContainer{
+        var bestMoveRow = -1
+        var bestMoveCol = -1
+        var bestScore = Int.MIN_VALUE
+        for(i in 0 until 4){
+            for(j in 0 until 4){
+                if (matrix[i][j]==-1){
+                    matrix[i][j]=0
+                    val score=minmax(0,false)
+                    matrix[i][j]=-1
+                    if (score > bestScore) {
+                        bestScore = score
+                        bestMoveRow = i
+                        bestMoveCol = j
+                    }
+                }
+
+            }
+        }
+        if(bestMoveCol!=-1 && bestMoveRow!=-1){
+            return IndexContainer(bestMoveRow, bestMoveCol)
+        }
+        return  IndexContainer(bestMoveRow, bestMoveCol)
+    }
+
+
+    private fun isPalyerTaskWithAI(){
+        val indexContainer=getBestMove()
+        val x=indexContainer.x
+        val y=indexContainer.y
+        val imageContainer=getImageView(x,y)
+        imageClickable[imageContainer.index]=1
+        matrix[x][y]=0
+        imageContainer.imageView.setImageResource(R.drawable.zero2)
+        Utills.SoundBeep(context as MainActivity,R.raw.tozero)
+        turn=1
+    }
+
+    private fun isAnyBoxClikable(): Boolean{
+        for(element in imageClickable){
+            if(element ==0){
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun perfromAction(imageView: ImageView, x:Int, y:Int,index: Int) {
+        imageClickable[index]=1
         if(turn==1){
-            matrix[x][y]=1;
+            matrix[x][y]=1
             imageView.setImageResource(R.drawable.cross)
             Utills.SoundBeep(context as MainActivity,R.raw.tox)
             turn=0
+
+            if(playerChoice==1 && isAnyBoxClikable()){
+                isPalyerTaskWithAI()
+                turn=1
+            }
         }else if(turn==0){
             matrix[x][y]=0
             imageView.setImageResource(R.drawable.zero2)
@@ -257,19 +349,6 @@ class FourToFour:Fragment() {
         return false
     }
 
-    /*private fun winner(win: Int):Boolean {
-        if(win==1){
-            Toast.makeText(context as MainActivity,"x is winner", Toast.LENGTH_SHORT).show()
-            return true
-        }else if(win==0){
-            Toast.makeText(context as MainActivity,"0 is winner", Toast.LENGTH_SHORT).show()
-            return true
-        }else if(win==2){
-            Toast.makeText(context as MainActivity,"Game Drow", Toast.LENGTH_SHORT).show()
-            return true
-        }
-        return false
-    }*/
 
     private fun check() :Int{
         for (i in 0 until 4) {

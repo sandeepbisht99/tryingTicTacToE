@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.trying.MainActivity
 import com.example.trying.R
@@ -39,9 +40,10 @@ import com.example.trying.databinding.ThreeXThreeBinding
 
         binding.restart.setOnClickListener { restart() }
         playerChoice=(context as MainActivity).intent.getIntExtra("PLAYER",2)
-        if(playerChoice!=2){
+        Toast.makeText(context,"playerChoice "+playerChoice, Toast.LENGTH_SHORT).show()
+        /*if(playerChoice!=2){
             isPalyerTaskWithAI()
-        }
+        }*/
         binding.b1.setOnClickListener {
             if (isClickable(0)) {
                 perfromAction(binding.b1, 0, 0,0)
@@ -123,45 +125,36 @@ import com.example.trying.databinding.ThreeXThreeBinding
      class ImageContainer(val  imageView: ImageView,val  index: Int)
      class IndexContainer(val x : Int, val y:Int)
 
-     fun getImageView(x: Int, y:Int):ImageContainer{
-         if(x==0 && y==0){
-             val imageContainer=ImageContainer(binding.b1, 0)
-             return imageContainer
-         }else if(x==0 && y==1){
-             val imageContainer=ImageContainer(binding.b2, 1)
-             return imageContainer
+     private fun getImageView(x: Int, y:Int):ImageContainer{
+         if(x==0 && y==0) {
+             return ImageContainer(binding.b1, 0)
+         }else if(x==0 && y==1) {
+             return ImageContainer(binding.b2, 1)
          }
-         else if(x==0 && y==2){
-             val imageContainer=ImageContainer(binding.b3, 2)
-             return imageContainer
+         else if(x==0 && y==2) {
+             return ImageContainer(binding.b3, 2)
          }
-         else if(x==1 && y==0){
-             val imageContainer=ImageContainer(binding.b4, 3)
-             return imageContainer
+         else if(x==1 && y==0) {
+             return ImageContainer(binding.b4, 3)
          }
-         else if(x==1 && y==1){
-             val imageContainer=ImageContainer(binding.b5, 4)
-             return imageContainer
+         else if(x==1 && y==1) {
+             return ImageContainer(binding.b5, 4)
          }
-         else if(x==1 && y==2){
-             val imageContainer=ImageContainer(binding.b6, 5)
-             return imageContainer
+         else if(x==1 && y==2) {
+             return ImageContainer(binding.b6, 5)
          }
-         else if(x==2 && y==0){
-             val imageContainer=ImageContainer(binding.b7, 6)
-             return imageContainer
+         else if(x==2 && y==0) {
+             return ImageContainer(binding.b7, 6)
          }
-         else if(x==2 && y==1){
-             val imageContainer=ImageContainer(binding.b8, 7)
-             return imageContainer
+         else if(x==2 && y==1) {
+             return ImageContainer(binding.b8, 7)
          }
-         else{
-             val imageContainer=ImageContainer(binding.b9, 8)
-             return imageContainer
+         else {
+             return ImageContainer(binding.b9, 8)
          }
      }
 
-     fun minmax(depth:Int,isMaximizing: Boolean):Int{
+     private fun minmax(depth:Int, isMaximizing: Boolean):Int{
          if(check()==1) return depth-10
          if(check()==0) return 10 -depth
          if(check()==2) return -2
@@ -195,7 +188,7 @@ import com.example.trying.databinding.ThreeXThreeBinding
          }
      }
 
-     fun getBestMove():IndexContainer?{
+     fun getBestMove():IndexContainer{
          var bestMoveRow = -1
          var bestMoveCol = -1
          var bestScore = Int.MIN_VALUE
@@ -218,14 +211,15 @@ import com.example.trying.databinding.ThreeXThreeBinding
              val indexContainer=IndexContainer(bestMoveRow, bestMoveCol)
              return indexContainer
          }
-        return  null
+         val indexContainer=IndexContainer(bestMoveRow, bestMoveCol)
+        return  indexContainer
      }
 
      fun isPalyerTaskWithAI(){
          val indexContainer=getBestMove()
-         val x=indexContainer?.x
-         val y=indexContainer?.y
-         val imageContainer=getImageView(x!!,y!!)
+         val x=indexContainer.x
+         val y=indexContainer.y
+         val imageContainer=getImageView(x,y)
          imageClickable[imageContainer.index]=1
          matrix[x][y]=0
          imageContainer.imageView.setImageResource(R.drawable.zero2)
@@ -233,9 +227,9 @@ import com.example.trying.databinding.ThreeXThreeBinding
          turn=1
      }
 
-     fun isAnyBoxClikable(): Boolean{
+     private fun isAnyBoxClikable(): Boolean{
          for(element in imageClickable){
-             if(element ==0){
+             if(element==0){
                  return true
              }
          }
