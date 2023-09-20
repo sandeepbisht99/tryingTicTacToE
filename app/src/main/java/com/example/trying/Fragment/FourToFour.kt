@@ -11,8 +11,11 @@ import com.example.trying.MainActivity
 import com.example.trying.R
 import com.example.trying.Utiil.Utills
 import com.example.trying.databinding.FourXFourBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
-class FourToFour:Fragment() {
+class FourToFour:Fragment() , CoroutineScope by MainScope() {
     lateinit var binding: FourXFourBinding
     var imageClickable= arrayOf(0,0,0,0,
         0,0,0,0,
@@ -45,9 +48,9 @@ class FourToFour:Fragment() {
 
         playerChoice=(context as MainActivity).intent.getIntExtra("PLAYER",2)
         Toast.makeText(context,"playerChoice "+playerChoice,Toast.LENGTH_SHORT).show()
-        /*if(playerChoice!=2){
+        if(playerChoice!=2){
             isPalyerTaskWithAI()
-        }*/
+        }
         binding.restart.setOnClickListener { restart() }
 
         binding.b1.setOnClickListener {
@@ -232,8 +235,9 @@ class FourToFour:Fragment() {
     }
 
     private fun minmax(depth:Int, isMaximizing: Boolean):Int{
-        if(check()==1) return depth-10
-        if(check()==0) return 10 -depth
+        if(depth==5) return -2
+        if(check()==1) return depth-6
+        if(check()==0) return 6 -depth
         if(check()==2) return -2
 
         if(isMaximizing){
@@ -303,6 +307,14 @@ class FourToFour:Fragment() {
         matrix[x][y]=0
         imageContainer.imageView.setImageResource(R.drawable.zero2)
         Utills.SoundBeep(context as MainActivity,R.raw.tozero)
+        val win=check()
+        if(Utills.winner(win,context as MainActivity)){
+            imageClickable= arrayOf(1,1,1,1,
+                1,1,1,1,
+                1,1,1,1,
+                1,1,1,1)
+            return
+        }
         turn=1
     }
 
@@ -322,9 +334,18 @@ class FourToFour:Fragment() {
             imageView.setImageResource(R.drawable.cross)
             Utills.SoundBeep(context as MainActivity,R.raw.tox)
             turn=0
-
+            val win=check()
+            if(Utills.winner(win,context as MainActivity)){
+                imageClickable= arrayOf(1,1,1,1,
+                    1,1,1,1,
+                    1,1,1,1,
+                    1,1,1,1)
+                return
+            }
             if(playerChoice==1 && isAnyBoxClikable()){
-                isPalyerTaskWithAI()
+                launch {
+                    isPalyerTaskWithAI()
+                }
                 turn=1
             }
         }else if(turn==0){

@@ -41,9 +41,9 @@ import com.example.trying.databinding.ThreeXThreeBinding
         binding.restart.setOnClickListener { restart() }
         playerChoice=(context as MainActivity).intent.getIntExtra("PLAYER",2)
         Toast.makeText(context,"playerChoice "+playerChoice, Toast.LENGTH_SHORT).show()
-        /*if(playerChoice!=2){
-            isPalyerTaskWithAI()
-        }*/
+        if(playerChoice!=2){
+           // isPalyerTaskWithAI()
+        }
         binding.b1.setOnClickListener {
             if (isClickable(0)) {
                 perfromAction(binding.b1, 0, 0,0)
