@@ -1,8 +1,12 @@
 package com.example.trying.Fragment
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -10,8 +14,13 @@ import com.example.trying.MainActivity
 import com.example.trying.R
 import com.example.trying.Utiil.Utills
 import com.example.trying.databinding.ThreeXThreeBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
- class ThreeToThree: Fragment(){
+class ThreeToThree: Fragment(), CoroutineScope by MainScope() {
     private val binding  by lazy { ThreeXThreeBinding.inflate(layoutInflater) }
     var imageClickable= arrayOf(0,0,0,0,0,0,0,0,0)
     var playerChoice=2
@@ -23,6 +32,17 @@ import com.example.trying.databinding.ThreeXThreeBinding
         arrayOf(-1, -1, -1),
         arrayOf(-1, -1, -1)
     )
+
+     val cells by lazy {
+         arrayOf(
+             arrayOf(binding.b1, binding.b2, binding.b3),
+             arrayOf(binding.b4, binding.b5, binding.b6),
+             arrayOf(binding.b7, binding.b8, binding.b9)
+         )
+     }
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,14 +56,18 @@ import com.example.trying.databinding.ThreeXThreeBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         binding.restart.setOnClickListener { restart() }
         playerChoice=(context as MainActivity).intent.getIntExtra("PLAYER",2)
         Toast.makeText(context,"playerChoice "+playerChoice, Toast.LENGTH_SHORT).show()
-        if(playerChoice!=2){
-           // isPalyerTaskWithAI()
-        }
+
+        /*CoroutineScope(Dispatchers.Main).launch {
+            delay(50)
+            if(playerChoice!=2){
+                isPalyerTaskWithAI()
+            }
+        }*/
+
+
         binding.b1.setOnClickListener {
             if (isClickable(0)) {
                 perfromAction(binding.b1, 0, 0,0)
@@ -216,15 +240,19 @@ import com.example.trying.databinding.ThreeXThreeBinding
      }
 
      fun isPalyerTaskWithAI(){
-         val indexContainer=getBestMove()
-         val x=indexContainer.x
-         val y=indexContainer.y
-         val imageContainer=getImageView(x,y)
-         imageClickable[imageContainer.index]=1
-         matrix[x][y]=0
-         imageContainer.imageView.setImageResource(R.drawable.zero2)
-         Utills.SoundBeep(context as MainActivity,R.raw.tozero)
-         turn=1
+             var indexContainer = getBestMove()
+             val x = indexContainer.x
+             val y = indexContainer.y
+             val imageContainer = getImageView(x, y)
+             imageClickable[imageContainer.index] = 1
+             matrix[x][y] = 0
+             launch(Dispatchers.Main) {
+                 imageContainer.imageView.setImageResource(R.drawable.zero2)
+                 Utills.SoundBeep(context as MainActivity, R.raw.tozero)
+             }
+             turn = 1
+
+
      }
 
      private fun isAnyBoxClikable(): Boolean{
@@ -237,14 +265,24 @@ import com.example.trying.databinding.ThreeXThreeBinding
      }
 
     private fun perfromAction( imageView: ImageView, x:Int, y:Int, index:Int) {
+        //animateWinningCells()
         imageClickable[index]=1
         if(turn==1){
             matrix[x][y]=1
             imageView.setImageResource(R.drawable.cross)
             Utills.SoundBeep(context as MainActivity,R.raw.tox)
+            val win=check()
+            if(Utills.winner(win,context as MainActivity)){
+                imageClickable= arrayOf(1,1,1,1,1,1,1,1,1)
+                return
+            }
             turn=0
+
             if(playerChoice==1 && isAnyBoxClikable()){
-                isPalyerTaskWithAI()
+                launch(Dispatchers.IO) {
+                    delay(200)
+                    isPalyerTaskWithAI()
+                }
                 turn=1
             }
         }else if(turn==0){
@@ -266,6 +304,29 @@ import com.example.trying.databinding.ThreeXThreeBinding
             return true
         }
         return false
+    }
+
+    private fun animateWinningCells() {
+        // Assuming you have a variable storing the winning row and columns
+        val winningRow = 0 // Replace with your winning row
+        val winningColStart = 0 // Replace with your winning column start
+
+        val scaleAnimation = AnimationUtils.loadAnimation(context as MainActivity, R.anim.animation)
+
+        for (col in winningColStart until 3) {
+            // val cell = matrix[winningRow][col]
+            Log.d("anim1",""+col)
+
+            val scaleAnimation = ObjectAnimator.ofPropertyValuesHolder(
+                cells[winningRow][winningColStart],
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f, 1.2f),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f, 1.2f)
+            )
+            scaleAnimation.duration = 500 // Duration in milliseconds
+
+            // Start the animation
+            scaleAnimation.start()
+        }
     }
 
 

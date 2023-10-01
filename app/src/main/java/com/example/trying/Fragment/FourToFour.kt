@@ -1,6 +1,7 @@
 package com.example.trying.Fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +13,13 @@ import com.example.trying.R
 import com.example.trying.Utiil.Utills
 import com.example.trying.databinding.FourXFourBinding
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 class FourToFour:Fragment() , CoroutineScope by MainScope() {
     lateinit var binding: FourXFourBinding
+    private var wall=2
     var imageClickable= arrayOf(0,0,0,0,
         0,0,0,0,
         0,0,0,0,
@@ -151,6 +154,7 @@ class FourToFour:Fragment() , CoroutineScope by MainScope() {
         }
     }
     private fun restart(){
+        wall=2
         imageClickable= arrayOf(0,0,0,0,
             0,0,0,0,
             0,0,0,0,
@@ -242,8 +246,8 @@ class FourToFour:Fragment() , CoroutineScope by MainScope() {
 
         if(isMaximizing){
             var bestScore = Int.MIN_VALUE
-            for (i in 0 until 4) {
-                for (j in 0 until 4) {
+            for (i in 0 until wall) {
+                for (j in 0 until wall) {
                     if (matrix[i][j] == -1) {
                         matrix[i][j] = 0
                         val score = minmax(depth+1,false)
@@ -255,8 +259,8 @@ class FourToFour:Fragment() , CoroutineScope by MainScope() {
             return bestScore
         }else{
             var bestScore = Int.MAX_VALUE
-            for (i in 0 until 4) {
-                for (j in 0 until 4) {
+            for (i in 0 until wall) {
+                for (j in 0 until wall) {
                     if (matrix[i][j] ==-1) {
                         matrix[i][j] = 1
                         val score = minmax( depth+1,true)
@@ -276,8 +280,8 @@ class FourToFour:Fragment() , CoroutineScope by MainScope() {
         var bestMoveRow = -1
         var bestMoveCol = -1
         var bestScore = Int.MIN_VALUE
-        for(i in 0 until 4){
-            for(j in 0 until 4){
+        for(i in 0 until wall){
+            for(j in 0 until wall){
                 if (matrix[i][j]==-1){
                     matrix[i][j]=0
                     val score=minmax(0,false)
@@ -299,23 +303,29 @@ class FourToFour:Fragment() , CoroutineScope by MainScope() {
 
 
     private fun isPalyerTaskWithAI(){
+        if(wall<4){
+            wall++
+        }
         val indexContainer=getBestMove()
         val x=indexContainer.x
         val y=indexContainer.y
         val imageContainer=getImageView(x,y)
         imageClickable[imageContainer.index]=1
         matrix[x][y]=0
-        imageContainer.imageView.setImageResource(R.drawable.zero2)
-        Utills.SoundBeep(context as MainActivity,R.raw.tozero)
-        val win=check()
-        if(Utills.winner(win,context as MainActivity)){
-            imageClickable= arrayOf(1,1,1,1,
-                1,1,1,1,
-                1,1,1,1,
-                1,1,1,1)
-            return
+        launch(Dispatchers.Main){
+            imageContainer.imageView.setImageResource(R.drawable.zero2)
+            Utills.SoundBeep(context as MainActivity,R.raw.tozero)
+            val win=check()
+            if(Utills.winner(win,context as MainActivity)){
+                imageClickable= arrayOf(1,1,1,1,
+                    1,1,1,1,
+                    1,1,1,1,
+                    1,1,1,1)
+                return@launch
+            }
+            turn=1
         }
-        turn=1
+
     }
 
     private fun isAnyBoxClikable(): Boolean{
@@ -328,6 +338,7 @@ class FourToFour:Fragment() , CoroutineScope by MainScope() {
     }
 
     private fun perfromAction(imageView: ImageView, x:Int, y:Int,index: Int) {
+        Log.d("@sandeep"," "+wall)
         imageClickable[index]=1
         if(turn==1){
             matrix[x][y]=1
@@ -343,7 +354,7 @@ class FourToFour:Fragment() , CoroutineScope by MainScope() {
                 return
             }
             if(playerChoice==1 && isAnyBoxClikable()){
-                launch {
+                launch(Dispatchers.IO) {
                     isPalyerTaskWithAI()
                 }
                 turn=1
