@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
  class FiveToFive:Fragment() , CoroutineScope by MainScope() {
 
-    private var wall:Int=3
+    private var wall:Int=4
     private var clickTwice:Int=0
     private lateinit var binding: FiveXFiveBinding
     private var imageClickable= arrayOf(0,0,0,0,0,
@@ -212,7 +212,7 @@ import kotlinx.coroutines.launch
 
     }
     private fun restart(){
-        wall=3
+        wall=4
         clickTwice=0
 
          imageClickable= arrayOf(0,0,0,0,0,
@@ -271,7 +271,7 @@ import kotlinx.coroutines.launch
 
 
     fun minmax(depth:Int, alpha : Int, beta:Int, isMaximizing: Boolean):Int{
-        if(depth==5) return -2
+        if(depth==4) return -2
         if(check()==1) return depth-7
         if(check()==0) return 7 -depth
         if(check()==2) return -2
@@ -487,10 +487,52 @@ import kotlinx.coroutines.launch
             1,1,1,1,1,
             1,1,1,1,1,
             1,1,1,1,1)
+
     }
+
+     private fun check2():Int{
+
+         for (i in 0 until 5) {
+             if (matrix[i][0] == matrix[i][1] && matrix[i][1] == matrix[i][2] && matrix[i][1] != -1
+                 || matrix[i][1] == matrix[i][2] && matrix[i][2] == matrix[i][3] && matrix[i][1] != -1
+             ) {
+                 return matrix[i][1] // Row win
+             }
+             if (matrix[0][i] == matrix[1][i] && matrix[1][i] == matrix[2][i] && matrix[0][i] != -1
+                 || matrix[1][i] == matrix[2][i] && matrix[2][i] == matrix[3][i] && matrix[1][i] != -1
+             ) {
+                 return matrix[1][i] // Column win
+             }
+         }
+
+         for (i in 0 until 5) {
+             for (j in 0 until 5) {
+                 if (matrix[i][j] ==-1) {
+                     return -1 // Game still ongoing
+                 }
+             }
+         }
+         return 2
+     }
 
 
     private fun check() :Int{
+
+
+        /*if(playerChoice==1){
+            for (i in 0 until 5) {
+                if (matrix[i][0] == matrix[i][1] && matrix[i][1] == matrix[i][2] && matrix[i][1] != -1
+                    || matrix[i][1] == matrix[i][2] && matrix[i][2] == matrix[i][3] && matrix[i][1]!=-1) {
+                    return matrix[i][1] // Row win
+                }
+                if (matrix[0][i] == matrix[1][i] && matrix[1][i] == matrix[2][i] && matrix[0][i] != -1
+                    ||matrix[1][i] == matrix[2][i] && matrix[2][i] == matrix[3][i] && matrix[1][i] != -1) {
+                    return matrix[1][i] // Column win
+                }
+            }
+        }*/
+
+
         for (i in 0 until 5) {
             if (matrix[i][0] == matrix[i][1] && matrix[i][1] == matrix[i][2] &&matrix[i][2]==matrix[i][3] &&matrix[i][1] != -1
                 || matrix[i][1] == matrix[i][2] && matrix[i][2] == matrix[i][3] && matrix[i][4]==matrix[i][3] && matrix[i][1]!=-1) {

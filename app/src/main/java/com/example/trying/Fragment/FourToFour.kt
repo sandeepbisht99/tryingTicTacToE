@@ -239,7 +239,7 @@ class FourToFour:Fragment() , CoroutineScope by MainScope() {
     }
 
     private fun minmax(depth:Int, isMaximizing: Boolean):Int{
-        if(depth==5) return -2
+        if(depth==3) return -2
         if(check()==1) return depth-6
         if(check()==0) return 6 -depth
         if(check()==2) return -2
